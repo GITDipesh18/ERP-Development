@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Advice Index</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+       .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+       .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+       .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0; /* menubar won't shrink */
+        }
+
+       .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+       .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+       .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+       .content h1 {
+            color: #004080;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+           .mainbox {
+                flex-direction: row;
+            }
+
+           .content {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT</h4>
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+            <div class="container-fluid mt-5">
+                <h1 class="text-center mb-4">Payment Advice Index</h1>
+                <div class="text-end mt-3 mb-3">
+                    <a href="{{ url_for('create_pa', po_number=po_no,pa_number=pa_no) }}" class="btn btn-success">Create New Payment Advice</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+                </div>
+                
+
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>PA No.</th>
+                            <th>Date</th>
+                            <th>Vendor Name</th>
+                            <th>Project Name</th>
+                            <th>PO No.</th>
+                            <th>Amount</th>
+                            <th>Mode of Payment</th>
+                            <th>Terms of Payment</th>
+                            <th>Nature of Payment</th>
+                            <th>Remarks</th>
+                            <th>Prepared By</th>
+                            <th>Initiated By</th>
+                            <th>Checked By</th>
+                            <th>Authorised By</th>
+                            <th>Approved By</th>
+                            <th>Download</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pa in payment_advices %}
+                        <tr>
+                            <td><a href="{{ url_for('create_pa', pa_number=pa['PA No.']) }}">{{ pa['PA No.'] }}</a></td>
+                            <td>{{ pa['Date'] }}</td>
+                            <td>{{ pa['Vendor Name'] }}</td>
+                            <td>{{ pa['Project Name'] }}</td>
+                            <td>{{ pa['PO No.'] }}</td>
+                            <td>{{ pa['Amount'] }}</td>
+                            <td>{{ pa['Mode of Payment'] }}</td>
+                            <td>{{ pa['Terms of Payment'] }}</td>
+                            <td>{{ pa['Nature of Payment'] }}</td>
+                            <td>{{ pa['Remarks'] }}</td>
+                            <td>{{ pa['Prepared By'] }}</td>
+                            <td>{{ pa['Initiated By'] }}</td>
+                            <td>{{ pa['Checked By'] }}</td>
+                            <td>{{ pa['Authorised By'] }}</td>
+                            <td>{{ pa['Approved By'] }}</td>
+                            <td>
+                                <form action="{{ url_for('download_pa') }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="pa_number" value="{{ pa['PA No.'] }}">
+                                <button type="submit" class="btn btn-primary btn-sm">Download</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <form action="{{ url_for('delete_pa') }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="pa_number" value="{{ pa['PA No.'] }}">
+                                    <input type="hidden" name="po_number" value="{{ pa['PO No.'] }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" {% if user_role in ['team_leader_user', 'team_emp_user','procurement_user','account_user'] %}disabled{% endif %}>Delete</button>
+                                </form>
+                                
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

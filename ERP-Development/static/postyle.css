@@ -1,0 +1,32 @@
+h6{
+    color: blue;
+}
+
+
+#billto{
+    border-left: 2px solid black;
+}
+#vendordetails{
+border-bottom: 2px solid black;
+}
+table{
+    border: 1px solid red;
+}
+th,td,tr{
+    border: 1px solid black;
+}
+th{
+    background-color: lightslategray;
+}
+#secondcolheight{
+    height: 500px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+
+
+}
+body{
+    font-weight: bold;
+}
+
+

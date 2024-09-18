@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add GRN</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0; /* menubar won't shrink */
+        }
+
+        .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+        .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .content h1 {
+            color: #004080;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .mainbox {
+                flex-direction: row;
+            }
+
+            .content {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT</h4>
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+            <div class="container-fluid mt-5">
+                <h1>Add New GRN</h1>
+                <form method="POST" action="{{ url_for('add_grn', po_number=po_number) }}">
+                    <div class="form-group">
+                        <label for="grn_number">GRN Number</label>
+                        <input type="text" class="form-control" id="grn_number" name="grn_number" required value="{{ grn_number }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="po_num">PO Number</label>
+                        <input type="text" class="form-control" id="po_num" name="po_num" value="{{ po_number }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="grn_date">GRN Date</label>
+                        <input type="date" class="form-control" id="grn_date" name="grn_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vendor">Vendor (Optional)</label>
+                        <select class="form-control" id="vendor" name="vendor">
+                            <option value="{{ vendor_name }}" selected>{{ vendor_name }}</option>
+                            {% for vendor in vendors %}
+                            <option value="{{ vendor['vendor_display_name'] }}">{{ vendor['vendor_display_name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="delivery_date">Delivery Date</label>
+                        <input type="date" class="form-control" id="delivery_date" name="delivery_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="terms_of_payment">Terms of Payment</label>
+                        <input type="text" class="form-control" id="terms_of_payment" name="terms_of_payment">
+                    </div>
+                    <div class="form-group">
+                        <label for="buyers_order_no">Buyer's Order No</label>
+                        <input type="text" class="form-control" id="buyers_order_no" name="buyers_order_no">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Description of Goods</th>
+                                <th>Quantity</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-repeater">
+                            {% for item in items %}
+                            <tr class="repeater-item">
+                                <td>{{ loop.index }}</td>
+                                <td><input type="text" class="form-control" name="description[]" value="{{ item.description }}" required></td>
+                                <td><input type="number" class="form-control" name="quantity[]" value="{{ item.quantity }}" step="1" min="1" required></td>
+                                <td><button type="button" class="btn btn-danger remove-item">Remove</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary" id="add-item">Add Item</button>
+                    <button type="submit" class="btn btn-success">Submit GRN</button>
+                </form>
+                <a href="{{ url_for('grnindex', po_number=po_number) }}" class="btn btn-secondary mt-3">Back to GRN List</a>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    let serialNo = {{ items|length + 1 }};
+        
+                    $('#add-item').click(function() {
+                        $('#items-repeater').append(`
+                            <tr class="repeater-item">
+                                <td>${serialNo}</td>
+                                <td><input type="text" class="form-control" name="description[]" required></td>
+                                <td><input type="number" class="form-control" name="quantity[]" step="1" min="1" required></td>
+                                <td><button type="button" class="btn btn-danger remove-item">Remove</button></td>
+                            </tr>
+                        `);
+                        serialNo++;
+                    });
+        
+                    $('#items-repeater').on('click', '.remove-item', function() {
+                        $(this).closest('.repeater-item').remove();
+                        $('#items-repeater .repeater-item').each(function(index) {
+                            $(this).find('td:first').text(index + 1);
+                        });
+                        serialNo = $('#items-repeater .repeater-item').length + 1;
+                    });
+                });
+            </script>
+
+</body>
+</html>

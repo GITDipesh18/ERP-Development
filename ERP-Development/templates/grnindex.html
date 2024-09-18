@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRN List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0;
+        }
+
+        .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+        .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .content h1 {
+            color: #004080;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .mainbox {
+                flex-direction: row;
+            }
+
+            .content {
+                margin: 20px;
+            }
+        }
+
+        /* Custom button styling */
+        .btn-custom {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT</h4>
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+            <div class="container-fluid mt-5">
+                <h1>GRN List for PO {{ po_number }}</h1>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>S. No.</th>
+                            <th>GRN Number</th>
+                            <th>PO Number</th>
+                            <th>GRN Date</th>
+                            <th>Actions</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i, grn in enumerate(grns) %}
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td> {{ grn['GRN Number'] }}</td>
+                            <td>{{ grn['PO No.'] }}</td>
+                            <td>{{ grn['GRN Date'] }}</td>
+                            <td>
+                                 <!-- Delete button -->
+                                 <form action="{{ url_for('delete_grn', grn_number=grn['GRN Number']) }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="po_number" value="{{ po_number }}">
+                                    <button type="submit" class="btn btn-danger btn-sm btn-custom">Delete</button>
+                                </form>
+                            </td>
+                            <td>
+                                </form>
+                                <!-- Download button -->
+                                 <a href="{{ url_for('download_grn', encoded_grn_number=grn['GRN Number']|urlencode) }}" class="btn btn-primary btn-sm btn-custom">Download</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{{ url_for('add_grn', po_number=po_number) }}" class="btn btn-success mt-3">Add GRN</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

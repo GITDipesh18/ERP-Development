@@ -1,0 +1,16 @@
+username,password,role
+team_emp1,123,team_emp_user
+
+team_leader1,123,team_leader_user
+
+team_manager1,123,team_manager_user
+
+store_user1,123,store_user
+
+procurement1,123,procurement_user
+
+account1,123,account_user
+
+admin,123,superadmin
+
+director,123,high_authority

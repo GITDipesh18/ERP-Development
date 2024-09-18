@@ -1,0 +1,94 @@
+/* style.css */
+
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Light gray background */
+    color: #495057; /* Dark gray text color */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px; /* Limit container width */
+    margin-top: 50px; /* Space from top */
+    padding: 20px;
+    background-color: #fff; /* White background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    border-radius: 5px; /* Rounded corners */
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px; /* Space below heading */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Space between form groups */
+}
+
+.table-responsive {
+    margin-top: 30px; /* Space above table */
+}
+
+.table {
+    background-color: #fff; /* White background for table */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.table th, .table td {
+    vertical-align: middle; /* Align text vertically */
+}
+
+.table th {
+    background-color: #343a40; /* Dark background for header */
+    color: #fff; /* White text color for header */
+    border-color: #454d55; /* Darker border color */
+}
+
+.btn {
+    border-radius: 3px; /* Rounded corners */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue */
+    border-color: #007bff; /* Blue */
+}
+
+.btn-primary:hover {
+    background-color: #0069d9; /* Darker blue on hover */
+    border-color: #0062cc; /* Darker blue on hover */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Red */
+    border-color: #dc3545; /* Red */
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* Darker red on hover */
+    border-color: #bd2130; /* Darker red on hover */
+}
+
+.btn-success {
+    background-color: #28a745; /* Green */
+    border-color: #28a745; /* Green */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #1e7e34; /* Darker green on hover */
+}
+
+.text-center {
+    text-align: center; /* Center-align text */
+}
+
+.text-center a {
+    color: #fff; /* White text color for links */
+    text-decoration: none; /* Remove underline from links */
+}
+
+.text-center a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

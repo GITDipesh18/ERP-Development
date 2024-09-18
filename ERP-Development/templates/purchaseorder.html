@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_item_style.css') }}">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0; /* menubar won't shrink */
+        }
+
+        .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+        .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+
+
+        .content h1 {
+            color: #004080;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .mainbox {
+                flex-direction: row;
+            }
+
+            .content {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT</h4>
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+          <div class="container-fluid mt-5">
+            <h2 class="text-center my-4">PO Form for Indent {{ indent_number }}</h2>
+            <form action="{{ url_for('purchaseorder', indent_number=indent_number) }}" method="post">
+              <div class="mb-3">
+                <label for="po_number" class="form-label">PO Number</label>
+                <input type="text" class="form-control" id="po_number" name="po_number" 
+                       value="{{ po_number }}" {% if po_details %}readonly{% endif %}>
+            </div>
+              <div class="mb-3">
+                <label for="po_date" class="form-label">PO Date</label>
+                <input type="date" class="form-control" id="po_date" name="po_date" value="{{ po_details[0][2] if po_details else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="delivery_date" class="form-label">Delivery Date</label>
+                <input type="date" class="form-control" id="delivery_date" name="delivery_date" value="{{ po_details[0][3] if po_details else '' }}" required>
+            </div>
+          
+              <!-- Hidden input field for indent_number -->
+              <input type="hidden" name="indent_number" value="{{ indent_number }}">
+          
+              <div class="row mb-3">
+                  <div class="col-sm-4">
+                      <label for="vendor" class="form-label">Select Vendor</label>
+                      <select class="form-select" id="vendor" name="vendor" required>
+                        <option value="">Select Vendor</option>
+                        {% if po_details %}
+                            <option value="{{ po_details[0][6] }}" selected>{{ po_details[0][6] }}</option>
+                        {% else %}
+                            <p>Vendor fetching error</p>
+                            <!-- Add more vendors as needed -->
+                        {% endif %}
+                    </select>
+                  </div>
+                  <div class="col-sm-4" style="padding-left: 80px;">
+                      <label for="billShipTo" class="form-label">Select Address</label>
+                      <select class="form-select" id="billShipTo" name="billShipTo" required>
+                        <option value="">Select Address</option>
+                        {% if po_details %}
+                            <option value="{{ po_details[0][7] }}" selected>{{ po_details[0][7] }}</option>
+                        {% else %}
+                            <p>Write Address</p>
+                            <!-- Add more addresses as needed -->
+                        {% endif %}
+                    </select>
+                  </div>
+              </div>
+          
+              <!-- Address and Vendor Details -->
+              <div class="row mb-3">
+                <div class="col-sm-5">
+                    <label for="vendorDetails" class="form-label">Vendor Details</label>
+                    <textarea class="form-control" id="vendorDetails" rows="5" readonly>{{ po_details[0][6] if po_details else '' }}</textarea>
+                </div>
+                <div class="col-sm-4">
+                    <label for="addressDetails" class="form-label">Address Details</label>
+                    <textarea class="form-control" id="addressDetails" rows="5" readonly>{{ po_details[0][7] if po_details else '' }}</textarea>
+                </div>
+            </div>
+          
+            <div class="row mb-3">
+              <div class="col-sm-2">
+                  <label for="gst" class="form-label">GST (%)</label>
+                  <input type="number" class="form-control" id="gst" name="gst" value="{{ po_details[0][4] if po_details else '18' }}" oninput="calculateTotals()" required>
+              </div>
+          </div>
+          
+              <!-- Item table -->
+              <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th scope="col">Sr. No</th>
+                      <th scope="col">Item & Description</th>
+                      <th scope="col">HSN/SAC</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Rate (INR)</th>
+                      <th scope="col">IGST</th>
+                      <th scope="col">GST Amount (INR)</th>
+                      <th scope="col">Amount (INR)</th>
+                      <th scope="col">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody id="itemTable">
+                    {% if po_details %}
+                        {% for po_item in po_details %}
+                            <tr>
+                                <td class="content-cell">{{ loop.index }}</td>
+                                <td class="content-cell"><input type="text" class="form-control" name="description[]" value="{{ po_item[8] }}"></td>
+                                <td class="content-cell"><input type="text" class="form-control" name="hsn[]" value="{{ po_item[9] }}"></td>
+                                <td class="content-cell"><input type="number" class="form-control qty" name="qty[]" value="{{ po_item[10] }}" oninput="calculateAmount(this)"></td>
+                                <td class="content-cell"><input type="number" class="form-control rate" name="rate[]" value="{{ po_item[11] }}" oninput="calculateAmount(this)"></td>
+                                <td class="content-cell"><span class="igst">18%</span></td>
+                                <td class="content-cell"><input type="number" class="form-control gst-amount" name="gstAmount[]" value="{{ po_item[12] }}" readonly></td>
+                                <td class="content-cell"><input type="number" class="form-control amount" name="amount[]" value="{{ po_item[13] }}" readonly></td>
+                                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItemRow(this)">Remove</button></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                    {% for item in items %}
+                    {% for i in item%}
+                  <tr>
+                    <td class="content-cell">{{loop.index}}</td>
+                    <td class="content-cell"><input type="text" class="form-control" name="description[]" value="{{ i['item_code'] }}"></td>
+                    <td class="content-cell"><input type="text" class="form-control" name="hsn[]"></td>
+                    <td class="content-cell"><input type="number" class="form-control qty" name="qty[]" value="{{ i['quantity'] }}" oninput="calculateAmount(this)"></td>
+                    <td class="content-cell"><input type="number" class="form-control rate" name="rate[]" oninput="calculateAmount(this)"></td>
+                    <td class="content-cell"><span class="igst">18%</span></td>
+                    <td class="content-cell"><input type="number" class="form-control gst-amount" name="gstAmount[]" readonly></td>
+                    <td class="content-cell"><input type="number" class="form-control amount" name="amount[]" readonly></td>
+                    <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItemRow(this)">Remove</button></td>
+                  </tr>
+                  {% endfor %}
+                  {% endfor %}
+                    {% endif %}
+                </tbody>
+              </table>
+          
+              <button type="button" class="btn btn-primary" onclick="addItem()">Add Item</button>
+              <button type="submit" class="btn btn-success">Submit</button>
+          
+    <div class="row mt-4">
+      <div class="col-sm-8">
+          <p><strong>Amount (In Words):</strong> <span id="amountInWords">{{ amount_in_words if po_details else '' }}</span></p>
+      </div>
+                  <div class="col-sm-4">
+                    <table class="table table-bordered">
+                      <tbody>
+                          <tr>
+                              <td>Sub-Total:</td>
+                              <td id="subTotal"></td>
+                          </tr>
+                          <tr>
+                              <td>IGST:</td>
+                              <td id="igstAmount"></td>
+                          </tr>
+                          <tr>
+                              <td><strong>Grand Total:</strong></td>
+                              <td id="grandTotal">{{ po_details[0][14] if po_details else '0' }}</td>
+                              <input type="hidden" name="grand_total" id="grand_total" value="{{ po_details[0][14] if po_details else '0' }}">
+                          </tr>
+                      </tbody>
+                  </table>
+                  </div>
+              </div>
+              
+              <div class="row mb-3">
+                  <div class="col-sm-3">
+                      <label for="status" class="form-label">Director Approval</label>
+                      {% if user_role in ['superadmin'] %}
+                     
+                          <select class="form-select" id="status" name="status">
+                              <option value="">Awaiting Approval</option>
+                              <option value="Pending" {% if po_details and po_details[0][5] == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="Approved" {% if po_details and po_details[0][5] == 'Approved' %}selected{% endif %}>Approved</option>
+            <option value="Rejected" {% if po_details and po_details[0][5] == 'Rejected' %}selected{% endif %}>Rejected</option>
+                          </select>
+                          
+
+                      {% else %}
+                          <input type="text" class="form-control" id="status" name="status" value="{{ po_details[0][5] if po_details else 'Pending' }}" readonly>
+                      {% endif %}
+                  </div>
+              </div>
+          
+          </form>
+          </div>            
+        </div>
+    </div>
+
+
+             
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Fetch vendors from CSV file and populate dropdown
+        fetch('/get_vendors') // Replace with your Flask route to fetch vendors
+          .then(response => response.json())
+          .then(data => {
+            const vendorSelect = document.getElementById('vendor');
+            data.forEach(vendor => {
+              const option = document.createElement('option');
+              option.value = vendor.vendor_display_name; // Adjust as per your vendor data structure
+              option.textContent = vendor.vendor_display_name;
+              vendorSelect.appendChild(option);
+            });
+          })
+          .catch(error => console.error('Error fetching vendors:', error));
+      });
+  
+      
+  
+      function addItem() {
+        const table = document.getElementById('itemTable');
+        const rowCount = table.rows.length + 1;
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td class="content-cell">${rowCount}</td>
+          <td class="content-cell"><input type="text" class="form-control" name="description[]"></td>
+          <td class="content-cell"><input type="text" class="form-control" name="hsn[]"></td>
+          <td class="content-cell"><input type="number" class="form-control qty" name="qty[]" oninput="calculateAmount(this)"></td>
+          <td class="content-cell"><input type="number" class="form-control rate" name="rate[]" oninput="calculateAmount(this)"></td>
+          <td class="content-cell"><span class="igst">${document.getElementById('gst').value}%</span></td>
+          <td class="content-cell"><input type="number" class="form-control gst-amount" name="gstAmount[]" readonly></td>
+          <td class="content-cell"><input type="number" class="form-control amount" name="amount[]" readonly></td>
+          <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItemRow(this)">Remove</button></td>
+        `;
+      }
+  
+      function calculateAmount(element) {
+        const row = element.closest('tr');
+        const qty = row.querySelector('.qty').value;
+        const rate = row.querySelector('.rate').value;
+        const amount = qty * rate;
+        const gst = parseFloat(document.getElementById('gst').value) || 0;
+        const gstAmount = (amount * gst) / 100;
+        row.querySelector('.gst-amount').value = gstAmount.toFixed(2);
+        row.querySelector('.amount').value = amount.toFixed(2);
+        calculateTotals();
+      }
+  
+      function calculateTotals() {
+        let subTotal = 0;
+        let gstTotal = 0;
+        const gst = parseFloat(document.getElementById('gst').value) || 0;
+  
+        document.querySelectorAll('.amount').forEach(input => {
+          subTotal += parseFloat(input.value) || 0;
+        });
+  
+        document.querySelectorAll('.gst-amount').forEach(input => {
+          gstTotal += parseFloat(input.value) || 0;
+        });
+  
+        const grandTotal = subTotal + gstTotal;
+  
+        document.getElementById('subTotal').textContent = subTotal.toFixed(2);
+        document.getElementById('igstAmount').textContent = gstTotal.toFixed(2);
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+        document.getElementById('amountInWords').textContent = numberToWords(grandTotal) + ' Only';
+  
+        document.getElementById('grand_total').value = grandTotal.toFixed(2);
+  
+        document.querySelectorAll('.igst').forEach(span => {
+          span.textContent = `${gst}%`;
+        });
+      }
+  
+      function removeItemRow(button) {
+              var row = button.parentNode.parentNode;
+              row.parentNode.removeChild(row);
+              rowCount--;
+              updateRowNumbers();}
+  
+      function numberToWords(number) {
+        const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+        const teens = ['Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+        const tens = ['', 'Ten', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        const scales = ['', 'Thousand', 'Million', 'Billion', 'Trillion'];
+  
+        if (number === 0) return 'Zero';
+  
+        let words = [];
+        let chunkIndex = 0;
+  
+        // Separate integer and fractional parts
+        let [integerPart, decimalPart] = number.toFixed(2).toString().split('.');
+        integerPart = parseInt(integerPart, 10);
+  
+        // Process integer part
+        while (integerPart > 0) {
+          let chunk = integerPart % 1000;
+          integerPart = Math.floor(integerPart / 1000);
+  
+          if (chunk !== 0) {
+            let chunkWords = [];
+  
+            if (chunk >= 100) {
+              chunkWords.push(units[Math.floor(chunk / 100)] + ' Hundred');
+              chunk %= 100;
+            }
+  
+            if (chunk >= 11 && chunk <= 19) {
+              chunkWords.push(teens[chunk - 11]);
+            } else if (chunk >= 20 || chunk === 10) {
+              chunkWords.push(tens[Math.floor(chunk / 10)]);
+              chunk %= 10;
+            }
+  
+            if (chunk > 0 && chunk < 10) {
+              chunkWords.push(units[chunk]);
+            }
+  
+            if (chunkWords.length > 0) {
+              if (chunkIndex > 0) {
+                chunkWords.push(scales[chunkIndex]);
+              }
+              words.unshift(chunkWords.join(' '));
+            }
+          }
+  
+          chunkIndex++;
+        }
+  
+        // Process decimal part
+        if (decimalPart && parseInt(decimalPart, 10) > 0) {
+          words.push('and ' + (decimalPart.length === 1 ? decimalPart + '0' : decimalPart) + ' Paise');
+        }
+  
+        return words.join(' ');
+      }
+  
+  
+      //document.addEventListener('DOMContentLoaded', function() {
+        // Fetch vendors from Flask route '/get_vendors'
+      //  fetch('/get_vendors')
+       //   .then(response => response.json())
+        //  .then(data => {
+        //    const vendorSelect = document.getElementById('vendor');
+         //   data.forEach(vendor => {
+          //    const option = document.createElement('option');
+           //   option.value = vendor.vendor_display_name; // Adjust as per your vendor data structure
+          //    option.textContent = vendor.vendor_display_name;
+           //   vendorSelect.appendChild(option);
+           // });
+        //  })
+       //   .catch(error => console.error('Error fetching vendors:', error));
+   //   });
+      
+      // Function to handle vendor selection and display details
+      document.getElementById('vendor').addEventListener('change', function() {
+        const selectedVendor = this.value;
+        fetch('/get_vendors')
+          .then(response => response.json())
+          .then(data => {
+            const selectedVendorData = data.find(vendor => vendor.vendor_display_name === selectedVendor);
+            if (selectedVendorData) {
+              const vendorDetailsTextarea = document.getElementById('vendorDetails');
+              vendorDetailsTextarea.value = `Company: ${selectedVendorData.company_name}\n`;
+              vendorDetailsTextarea.value += `Contact Person: ${selectedVendorData.contact_persons}\n`;
+              vendorDetailsTextarea.value += `Address: ${selectedVendorData.address}\n`;
+              vendorDetailsTextarea.value += `Email: ${selectedVendorData.vendor_email}\n`;
+              vendorDetailsTextarea.value += `GSTIN: ${selectedVendorData.gst_treatment}\n`;
+              // Add more fields as needed
+            }
+          })
+          .catch(error => console.error('Error fetching vendors:', error));
+      });
+      document.addEventListener('DOMContentLoaded', function() {
+        fetch('/get_addresses')
+          .then(response => response.json())
+          .then(data => {
+            const billShipToSelect = document.getElementById('billShipTo');
+            data.forEach(address => {
+              const option = document.createElement('option');
+              option.value = address.id;
+              option.textContent = address.display_name;
+              billShipToSelect.appendChild(option);
+            });
+    
+            billShipToSelect.addEventListener('change', function() {
+              const selectedAddress = data.find(address => address.id == this.value);
+              document.getElementById('addressDetails').value = selectedAddress ? selectedAddress.details : '';
+            });
+          })
+          .catch(error => console.error('Error fetching addresses:', error));
+      });
+      
+    </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Payment Advice</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0; /* menubar won't shrink */
+        }
+
+        .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+        .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .content h1 {
+            color: #004080;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+
+        .form-group textarea {
+            height: 100px;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .mainbox {
+                flex-direction: row;
+            }
+
+            .content {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT</h4>
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+            <h1>Create Payment Advice</h1>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            <form action="/save_pa" method="POST">
+                <div class="form-group">
+                    <label for="pa_no">PA No.:</label>
+                    <input type="text" class="form-control" id="pa_no" name="pa_no" value="{{ pa_no }}" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" class="form-control" id="date" name="date" value="{{ date }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="vendor_name">Vendor Name:</label>
+                    <input type="text" class="form-control" id="vendor_name" name="vendor_name" value="{{ vendor_name }}" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="project_name">Project Name:</label>
+                    <input type="text" class="form-control" id="project_name" name="project_name" value="{{ project_name }}" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="po_no">PO No.:</label>
+                    <input type="text" class="form-control" id="po_no" name="po_no" value="{{ po_no }}" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" class="form-control" id="amount" name="amount" value="{{ amount }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="mode_of_payment">Mode of Payment:</label>
+                    <select class="form-control" id="mode_of_payment" name="mode_of_payment" required>
+                        <option value="Cheque" {% if mode_of_payment == 'Cheque' %}selected{% endif %}>Cheque</option>
+                        <option value="RTGS" {% if mode_of_payment == 'RTGS' %}selected{% endif %}>RTGS</option>
+                        <option value="Remittance" {% if mode_of_payment == 'Remittance' %}selected{% endif %}>Remittance</option>
+                        <option value="DD" {% if mode_of_payment == 'DD' %}selected{% endif %}>DD</option>
+                        <option value="TL" {% if mode_of_payment == 'TL' %}selected{% endif %}>TL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="terms_of_payment">Terms of Payment:</label>
+                    <select class="form-control" id="terms_of_payment" name="terms_of_payment" required>
+                        <option value="Advance Payment" {% if terms_of_payment == 'Advance Payment' %}selected{% endif %}>Advance Payment</option>
+                        <option value="Part Payment" {% if terms_of_payment == 'Part Payment' %}selected{% endif %}>Part Payment</option>
+                        <option value="Full Payment" {% if terms_of_payment == 'Full Payment' %}selected{% endif %}>Full Payment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nature_of_payment">Nature of Payment:</label>
+                    <select class="form-control" id="nature_of_payment" name="nature_of_payment" required>
+                        <option value="Capital Expenditure - Moveable" {% if nature_of_payment == 'Capital Expenditure - Moveable' %}selected{% endif %}>Capital Expenditure - Moveable</option>
+                        <option value="Capital Expenditure - Immovable" {% if nature_of_payment == 'Capital Expenditure - Immovable' %}selected{% endif %}>Capital Expenditure - Immovable</option>
+                        <option value="Revenue Expenditure - Purchase" {% if nature_of_payment == 'Revenue Expenditure - Purchase' %}selected{% endif %}>Revenue Expenditure - Purchase</option>
+                        <option value="Revenue Expenditure - Labour" {% if nature_of_payment == 'Revenue Expenditure - Labour' %}selected{% endif %}>Revenue Expenditure - Labour</option>
+                        <option value="Revenue Expenditure - Repair & Maintenance" {% if nature_of_payment == 'Revenue Expenditure - Repair & Maintenance' %}selected{% endif %}>Revenue Expenditure - Repair & Maintenance</option>
+                        <option value="Revenue Expenditure - Consultancy" {% if nature_of_payment == 'Revenue Expenditure - Consultancy' %}selected{% endif %}>Revenue Expenditure - Consultancy</option>
+                        <option value="Revenue Expenditure - Others (GST)" {% if nature_of_payment == 'Revenue Expenditure - Others (GST)' %}selected{% endif %}>Revenue Expenditure - Others (GST)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remarks:</label>
+                    <textarea class="form-control" id="remarks" name="remarks">{{ remarks }}</textarea>
+                </div>
+            
+                <!-- Approval Fields -->
+                <div class="form-group">
+                    <label for="prepared_by">Prepared By:</label>
+                    {% if user_role in ['superadmin', 'procurement_user'] %}
+                        <select class="form-control" id="prepared_by" name="prepared_by">
+                            <option value="">Select Approval Status</option>
+                            <option value="Approved" {% if prepared_by == 'Approved' %}selected{% endif %}>Approved</option>
+                            <option value="Rejected" {% if prepared_by == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="Pending" {% if prepared_by == 'Pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    {% else %}
+                        <input type="text" class="form-control" id="prepared_by" name="prepared_by" value="{{ prepared_by }}" readonly>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="initiated_by">Initiated By:</label>
+                    {% if user_role in ['superadmin', 'account_user'] %}
+                        <select class="form-control" id="initiated_by" name="initiated_by">
+                            <option value="">Select Approval Status</option>
+                            <option value="Approved" {% if initiated_by == 'Approved' %}selected{% endif %}>Approved</option>
+                            <option value="Rejected" {% if initiated_by == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="Pending" {% if initiated_by == 'Pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    {% else %}
+                        <input type="text" class="form-control" id="initiated_by" name="initiated_by" value="{{ initiated_by }}" readonly>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="checked_by">Checked By:</label>
+                    {% if user_role in ['superadmin', 'account_user'] %}
+                        <select class="form-control" id="checked_by" name="checked_by">
+                            <option value="">Select Approval Status</option>
+                            <option value="Approved" {% if checked_by == 'Approved' %}selected{% endif %}>Approved</option>
+                            <option value="Rejected" {% if checked_by == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="Pending" {% if checked_by == 'Pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    {% else %}
+                        <input type="text" class="form-control" id="checked_by" name="checked_by" value="{{ checked_by }}" readonly>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="authorised_by">Authorised By:</label>
+                    {% if user_role in ['superadmin', 'account_user'] %}
+                        <select class="form-control" id="authorised_by" name="authorised_by">
+                            <option value="">Select Approval Status</option>
+                            <option value="Approved" {% if authorised_by == 'Approved' %}selected{% endif %}>Approved</option>
+                            <option value="Rejected" {% if authorised_by == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="Pending" {% if authorised_by == 'Pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    {% else %}
+                        <input type="text" class="form-control" id="authorised_by" name="authorised_by" value="{{ authorised_by }}" readonly>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="approved_by">Approved By:</label>
+                    {% if user_role in ['superadmin', 'account_user'] %}
+                        <select class="form-control" id="approved_by" name="approved_by">
+                            <option value="">Select Approval Status</option>
+                            <option value="Approved" {% if approved_by == 'Approved' %}selected{% endif %}>Approved</option>
+                            <option value="Rejected" {% if approved_by == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="Pending" {% if approved_by == 'Pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    {% else %}
+                        <input type="text" class="form-control" id="approved_by" name="approved_by" value="{{ approved_by }}" readonly>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+            
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

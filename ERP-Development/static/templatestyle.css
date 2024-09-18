@@ -1,0 +1,74 @@
+body{
+    margin: 20px;
+  }
+  
+  #main-con{
+      /* background-color:#ffe4b5; */
+      height:100vh;
+      
+    
+      
+  }
+  #row1{
+    background-color: #ffe4b5;
+  
+    
+  }
+  p{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.5rem;
+  }
+  
+  #almond{
+      background-color: #ffe4b5;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+  
+  }
+  
+  
+  #homerow{   
+      
+      background-color:
+      coral;                               
+      height: 80px;
+    
+  }
+  #homerow a{
+      text-decoration: none;
+      color:white;
+      font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: 1.3rem;
+     
+  
+  }
+  #homerow a:hover{
+      background-color:rgb(228, 140, 108);
+     
+  }
+  #homerow a:active{
+      background-color:rgb(228, 140, 108);
+     
+  }
+  #homerow a{
+      padding-top: 25px;
+  }
+  
+  #white-col{
+      background-color:white;
+      height: 810px;
+     
+  }
+  
+
+  
+
+  
+  /* Include 
+  1) home.html
+  2) home2.html
+  3) purchase.html
+  Home.html & home2.html same styling 
+  purchasestyling */
+  

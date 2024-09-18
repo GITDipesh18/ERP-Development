@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        select {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vendor Management</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Salutation</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Company Name</th>
+                <th>Vendor Display Name</th>
+                <th>Vendor Email</th>
+                <th>Vendor Phone</th>
+                <th>Action</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vendor in vendors %}
+            <tr>
+                <td>{{ vendor.salutation }}</td>
+                <td>{{ vendor.first_name }}</td>
+                <td>{{ vendor.last_name }}</td>
+                <td>{{ vendor.company_name }}</td>
+                <td>{{ vendor.vendor_display_name }}</td>
+                <td>{{ vendor.vendor_email }}</td>
+                <td>{{ vendor.vendor_phone }}</td>
+                <td>
+                    <form action="/update_vendor_action/{{ loop.index0 }}" method="post">
+                        <select name="action" onchange="this.form.submit()">
+                            <option value="Pending" {% if vendor.action == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Accept" {% if vendor.action == 'Accept' %}selected{% endif %}>Accept</option>
+                            <option value="Reject" {% if vendor.action == 'Reject' %}selected{% endif %}>Reject</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <button onclick="window.location.href='#{{ loop.index0 }}'">Edit</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="window.location.href='/add_vendor'">Add New Vendor</button>
+    <button onclick="window.location.href='{{ url_for('index') }}'">Back to Home</button>
+</body>
+</html>

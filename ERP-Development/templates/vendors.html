@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendors</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Vendors</h1>
+        <a href="{{ url_for('add_vendor') }}" class="btn btn-primary mb-2">Add Vendor</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Salutation</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Company Name</th>
+                    <th>Display Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendor in vendors %}
+                <tr>
+                    <td>{{ vendor.salutation }}</td>
+                    <td>{{ vendor.first_name }}</td>
+                    <td>{{ vendor.last_name }}</td>
+                    <td>{{ vendor.company_name }}</td>
+                    <td>{{ vendor.vendor_display_name }}</td>
+                    <td>{{ vendor.vendor_email }}</td>
+                    <td>{{ vendor.vendor_phone }}</td>
+                    <td>{{ vendor.address }}</td>
+                    <td>
+                        <!-- Add action buttons if needed -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+Indent Number,Item Code,Type of Item,Item with Specification,To be Used,Required By,Quantity,UDM
+Indent/24-25/0001,PC123,Hardware,0.5 Inch screw,Terminator,2024-08-01,200,Nos
+Indent/24-25/0001,RELY_65R4,Hardware,Relay7965R,Terminator,2024-08-01,5,Nos
+Indent/24-25/0002,RELY_65R4,Hardware,Relay7965R,Terminator,,6,Nos
+Indent/24-25/0003,RELY_65R4,Hardware,Relay7965R,Terminator,,6,Nos
+Indent/24-25/0004,RELY_65R4,Hardware,Relay7965R,Terminator,2024-08-07,6,Nos
+Indent/24-25/0005,LED,Hardware,6 Inch QLED,SDR,2024-08-12,1,Nos
+Indent/24-25/0005,RELY_65R4,Hardware,Relay7965R,SDR,2024-08-12,5,Nos
+Indent/24-25/0006,LED,Hardware,6 Inch QLED,SDR,,1,Nos
+Indent/24-25/0007,RELY_65R7,Hardware,Relay7965R,In Use,,5,Nos
+Indent/24-25/0008, Screw,Hardware,0.5 Inch screw,Terminator,2024-08-26,500,Nos
+Indent/24-25/0008,LED,Hardware,0.5 Inch screen,Terminator,2024-08-26,2,Nos
+Indent/24-25/0009, Screw,Hardware,0.5 Inch screw,Terminator,,500,Nos
+Indent/24-25/0010,ASCDV,FDEVF,DVSF,WEDFR,2024-09-19,2,DECFV
+Indent/24-25/0011,frgvtbwdsfv,dcfvgb,dwerfgbhnderfvgt,fgbhn,2024-09-09,2,defvg

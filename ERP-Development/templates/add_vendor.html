@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Vendor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Vendor</h1>
+    <form action="/add_vendor" method="post" enctype="multipart/form-data">
+        <label for="salutation">Salutation:</label>
+        <input type="text" id="salutation" name="salutation" required>
+
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required>
+
+        <label for="company_name">Company Name:</label>
+        <input type="text" id="company_name" name="company_name" required>
+
+        <label for="vendor_display_name">Vendor Display Name:</label>
+        <input type="text" id="vendor_display_name" name="vendor_display_name" required>
+
+        <label for="vendor_email">Vendor Email:</label>
+        <input type="email" id="vendor_email" name="vendor_email" required>
+
+        <label for="vendor_phone">Vendor Phone:</label>
+        <input type="tel" id="vendor_phone" name="vendor_phone" required>
+
+        <label for="work_phone">Work Phone:</label>
+        <input type="tel" id="work_phone" name="work_phone" required>
+
+        <label for="mobile">Mobile:</label>
+        <input type="tel" id="mobile" name="mobile" required>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="contact_persons">Contact Persons:</label>
+        <input type="text" id="contact_persons" name="contact_persons" required>
+
+        <label for="custom_fields">Custom Fields:</label>
+        <input type="text" id="custom_fields" name="custom_fields" required>
+
+        <label for="reporting_tags">Reporting Tags:</label>
+        <input type="text" id="reporting_tags" name="reporting_tags" required>
+
+        <label for="remarks">Remarks:</label>
+        <input type="text" id="remarks" name="remarks" required>
+
+        <label for="gst_treatment">GSTIN:</label>
+        <input type="text" id="gst_treatment" name="gst_treatment" required>
+
+        <label for="source_of_supply">Source of Supply:</label>
+        <input type="text" id="source_of_supply" name="source_of_supply" required>
+
+        <label for="pan">PAN:</label>
+        <input type="text" id="pan" name="pan" required>
+
+        <label for="msme_registered">MSME Registered?</label>
+        <input type="checkbox" id="msme_registered" name="msme_registered">
+
+        <label for="currency">Currency:</label>
+        <input type="text" id="currency" name="currency" required>
+
+        <label for="payment_terms">Payment Terms:</label>
+        <input type="text" id="payment_terms" name="payment_terms" required>
+
+        <label for="tds">TDS:</label>
+        <input type="text" id="tds" name="tds" required>
+
+        <label for="enable_portal">Enable Portal?</label>
+        <input type="checkbox" id="enable_portal" name="enable_portal">
+
+        <label for="portal_language">Portal Language:</label>
+        <input type="text" id="portal_language" name="portal_language" required>
+
+        <label for="document">Document (PDF only):</label>
+        <input type="file" id="document" name="document" accept="application/pdf" multiple required>
+
+        <input type="submit" value="Add Vendor">
+    </form>
+</body>
+</html>

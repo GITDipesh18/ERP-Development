@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_item_style.css') }}">
+    <style>
+        /* Reset default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 35px 0;
+            font-size: 24px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .mainbox {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .menubar {
+            background-color: #0059b3;
+            color: white;
+            padding: 20px;
+            border-right: 3px solid #003366;
+            flex-shrink: 0; /* menubar won't shrink */
+        }
+
+        .menubar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+
+        .menubar a:hover {
+            background-color: #003366;
+            color: #e6e6e6;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background: radial-gradient(circle, #e6f2ff, #cce0ff, #99ccff, #6699ff);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+
+
+        .content h1 {
+            color: #004080;
+        }
+
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .mainbox {
+                flex-direction: row;
+            }
+
+            .content {
+                margin: 20px;
+            }
+        }
+        .header img {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h4>PARAS ANTI-DRONE TECHNOLOGIES PVT.LTD</h4>
+        <img src="/static/logo.jpg" alt="Company Logo" class="img-fluid">
+    </div>
+
+    <div class="mainbox">
+        <div class="menubar">
+            <a href="#">HOME</a>
+            <a href="#">PURCHASE</a>
+            <a href="#">PRODUCTION</a>
+            <a href="#">PROJECTS</a>
+        </div>
+        <div class="content">
+            <div class="container-fluid mt-5">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <h1 class="mb-2 text-left">PURCHASE LIST</h1>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+                        <a href="{{ url_for('add_items') }}" class="btn btn-success">Create New Indent</a>
+                        <a href="{{ url_for('vendor') }}" class="btn btn-primary">Vendor Registration</a>
+                    </div>
+                </div>
+                <!-- Search Form -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <form id="search-form" class="form-inline float-right">
+                            <input type="text" id="search-input" class="form-control mr-2" placeholder="Search by Project Name" required>
+                            <button type="button" id="search-button" class="btn btn-outline-primary">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <table id="indent-table" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Indent Number</th>
+                            <th>Date</th>
+                            <th>Department</th>
+                            <th>Project Name</th>
+                            <th>Initiated By</th>
+                            <th>Store</th>
+                            <th>Manager</th>
+                            <th>Director</th>
+                            <th>Action</th>
+                            <th>Download</th>
+                            <th>Purchase Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for indent in indents %}
+                        <tr>
+                            {% if session.role in [ 'team_leader_user', 'superadmin','procurement_user','store_user','high_authority'] %}
+                            <td class="indent-number">
+                                <a href="{{ url_for('add_items', indent_number=indent['indent_number']) }}"  >
+                                    {{ indent['indent_number'] }}
+                                </a>
+                            </td>
+                        {% else %}
+                            <td class="indent-number">
+                                {{ indent['indent_number'] }}
+                            </td>
+                        {% endif %}
+
+                            <td>{{ indent['date'] }}</td>
+                            <td>{{ indent['department'] }}</td>
+                            <td class="project-name">{{ indent['project_name'] }}</td>
+                            <td>{{ indent['initiated_by'] }}</td>
+                            <td>{{ indent['store'] }}</td>
+                            <td>{{ indent['manager'] }}</td>
+                            <td>{{ indent['director'] }}</td>
+                            <td>
+                                <form action="{{ url_for('delete_indent') }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="indent_number" value="{{ indent['indent_number'] }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                            {% if user_role in ['team_leader_user', 'team_emp_user', 'procurement_user','store_user'] %}disabled{% endif %}>
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('download_indent') }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="indent_number" value="{{ indent['indent_number'] }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Download</button>
+                                </form>
+                            </td>
+                            
+                            <td>
+                                <form action="{{ url_for('poindex', indent_number=indent['indent_number']) }}" method="GET" style="display:inline;">
+                                    <button type="submit" class="btn btn-info btn-sm">Create PO</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const table = document.getElementById('indent-table');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const projectNameCell = rows[i].getElementsByClassName('project-name')[0];
+                if (projectNameCell) {
+                    const projectName = projectNameCell.textContent.toLowerCase();
+                    if (projectName.includes(searchInput)) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
