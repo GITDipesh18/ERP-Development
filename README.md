@@ -1,0 +1,1 @@
+Enhanced ERP modules using HTML, CSS, JavaScript, Flask (Python), CSV, and Bootstrap to improve user experience and system efficiency. Implemented new features, optimized code, and reduced processing times, resulting in streamlined operations and increased user satisfaction.
